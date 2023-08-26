@@ -20,7 +20,7 @@ pub async fn remove_default_route() -> std::io::Result<()> {
     let default_route = Route::new(IpAddr::V4("0.0.0.0".parse().unwrap()), 0);
 
     println!("Removing default route: {:?}", default_route);
-    handle.delete(default_route).await
+    handle.delete(&default_route).await
 }
 
 pub async fn add_default_route(old_gateway_ip: &str) -> std::io::Result<()> {
