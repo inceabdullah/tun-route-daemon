@@ -17,6 +17,7 @@ pub async fn monitor(tun_device_name: &str) -> std::io::Result<bool> {
                 println!("Route change detected: {:?}", route);
                 if let Some(ifindex) = route.ifindex {
                     let interface_name = get_interface_name_from_index(ifindex).unwrap_or_default();  // Use the helper function
+                    println!("interface_name and ifindex: {}, {:?}", interface_name, ifindex);
 
                     if interface_name == tun_device_name {
                         println!("Route change detected for TUN device: {:?}", route);
