@@ -17,8 +17,8 @@ pub async fn set(old_gateway_ip: Option<&str>) -> std::io::Result<()> {
 
 pub async fn remove_default_route() -> std::io::Result<()> {
     let handle = Handle::new()?;
-    let default_route = IpAddr::V4("0.0.0.0".parse().unwrap());
-    
+    let default_route = Route::new(IpAddr::V4("0.0.0.0".parse().unwrap()), 0);
+
     println!("Removing default route: {:?}", default_route);
     handle.delete(default_route).await
 }
