@@ -11,8 +11,10 @@ pub async fn monitor(tun_device_name: &str) -> std::io::Result<bool> {
     println!("Monitoring TUN device {}, press Ctrl+C to cancel...", tun_device_name);
 
     while let Some(route_change) = stream.next().await {
+        println!("Route changed. RouteChange: {:?}", route_change);
         match route_change {
             RouteChange::Add(route) | RouteChange::Delete(route) | RouteChange::Change(route) => {
+                println!("Route change detected: {:?}", route);
                 if let Some(ifindex) = route.ifindex {
                     let interface_name = get_interface_name_from_index(ifindex).unwrap_or_default();  // Use the helper function
 
