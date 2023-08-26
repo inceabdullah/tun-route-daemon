@@ -1,19 +1,19 @@
 use net_route::{Route, Handle};
 use std::net::IpAddr;
 
-pub async fn set(old_gateway_ip: &str) -> std::io::Result<()> {
-    // Remove Default Route
-    remove_default_route().await?;
-    
-    // Add Default Route
+pub async fn set(old_gateway_ip: Option<&str>) -> std::io::Result<()> {
     if let Some(gateway_ip) = old_gateway_ip {
-        add_default_route(&gateway_ip.to_string()).await?;
+        // Remove Default Route
+        remove_default_route().await?;
+        
+        // Add Default Route
+        add_default_route(gateway_ip).await?;
     } else {
         println!("No old gateway IP found for TUN device. Skipping setting default route.");
     }
+    
+    Ok(())
 }
-
-
 
 pub async fn remove_default_route() -> std::io::Result<()> {
     let handle = Handle::new()?;
