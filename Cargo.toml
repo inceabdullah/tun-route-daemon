@@ -1,6 +1,6 @@
 [package]
 name = "tun-route-daemon"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["abdullah ince"]
 description = "A Rust-based daemon for managing and monitoring TUN devices and their routing configurations."
 license = "MIT"
