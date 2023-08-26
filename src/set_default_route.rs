@@ -1,7 +1,7 @@
 use net_route::{Route, Handle};
 use std::net::IpAddr;
 
-pub async fn set(old_gateway_ip: Option<&str>) -> std::io::Result<()> {
+pub async fn set(old_gateway_ip: &str) -> std::io::Result<()> {
     if let Some(gateway_ip) = old_gateway_ip {
         // Remove Default Route
         remove_default_route().await?;
