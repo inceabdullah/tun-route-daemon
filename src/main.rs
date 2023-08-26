@@ -1,7 +1,7 @@
 use std::env;
 use std::io::Result;
 
-mod route_utils; // Import the route_utils module
+mod route_utils;
 mod interface_utils;
 
 #[tokio::main]
@@ -19,28 +19,32 @@ async fn main() -> Result<()> {
     let tun_device_ip = &args[2];
 
     // Check Tun Device Existence
-    if route_utils::check_tun_device_exists(tun_device_name).await? {
+    if route_utils::check_tun_device::exists(tun_device_name).await? {
         // Store Old Default Route
-        let old_route = route_utils::store_old_default_route().await?;
+        let old_route = route_utils::store_old_route::get().await?;
 
-        // Get TUN Device's Old Gateway IP
-        let tun_old_gateway_ip = route_utils::get_tun_gateway(tun_device_name).await?;
+    // Get TUN Device's Old Gateway IP
+    let tun_old_gateway_ip = route_utils::get_tun_gateway::get(tun_device_name).await?;
 
-        // Set Specific Route
-        route_utils::set_specific_route(tun_device_ip, &old_route).await?;
+    // Set Specific Route
+    route_utils::set_specific_route::set(tun_device_ip, &old_route).await?;
 
-        // Set Default Route
-        route_utils::set_default_route(&tun_old_gateway_ip).await?;
+    // Set Default Route
+    if let Some(tun_old_gateway_ip_str) = &tun_old_gateway_ip {
+        route_utils::set_default_route::set(tun_old_gateway_ip_str).await?;
+    } else {
+        println!("No old gateway IP found for TUN device. Skipping setting default route.");
+    }
 
         // Monitor Tun Device
-        let should_revert = route_utils::monitor_tun_device(tun_device_name).await?;
+        let should_revert = route_utils::monitor_tun_device::monitor(tun_device_name).await?;
 
         if should_revert {
             // Revert to Old Default Route
-            route_utils::revert_to_old_default_route(&old_route).await?;
+            route_utils::revert_old_route::revert(&old_route).await?;
 
             // Remove Specific Route
-            route_utils::remove_specific_route(tun_device_ip).await?;
+            route_utils::remove_specific_route::remove(tun_device_ip).await?;
         }
     } else {
         println!("Tun device does not exist. Exiting...");
