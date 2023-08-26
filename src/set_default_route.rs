@@ -2,16 +2,12 @@ use net_route::{Route, Handle};
 use std::net::IpAddr;
 
 pub async fn set(old_gateway_ip: &str) -> std::io::Result<()> {
-    if let Some(gateway_ip) = old_gateway_ip {
-        // Remove Default Route
-        remove_default_route().await?;
-        
-        // Add Default Route
-        add_default_route(gateway_ip).await?;
-    } else {
-        println!("No old gateway IP found for TUN device. Skipping setting default route.");
-    }
+    // Remove Default Route
+    remove_default_route().await?;
     
+    // Add Default Route
+    add_default_route(old_gateway_ip).await?;
+
     Ok(())
 }
 
