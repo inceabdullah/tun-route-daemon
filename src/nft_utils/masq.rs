@@ -1,6 +1,9 @@
 use std::process::Command;
 use regex::Regex;
 
+static CHAIN_NAME: &str = "tun_route_daemon";
+
+
 pub fn rm_masq_for_ifname(ifname: &str) {
 
     let chain_name = "postrouting_tun_route_daemon";
@@ -44,4 +47,34 @@ pub fn rm_masq_for_ifname(ifname: &str) {
             Err(e) => eprintln!("Error deleting rule with handle {}: {:?}", handle_id, e),
         }
     }
+}
+
+pub fn add_masq_for_ifname(ifname: &str) {
+
+    let chain_name_prerouting = format!("prerouting_{}", CHAIN_NAME);
+    let chain_name_postrouting = format!("postrouting_{}", CHAIN_NAME);
+    
+    // nft add table ip nat
+    Command::new("nft")
+        .args(&["add", "table", "ip", "nat"])
+        .status()
+        .expect("Failed to execute 'nft add table' command");
+
+    // nft add chain ip nat $chain_name_prerouting { type nat hook prerouting priority 0; policy accept; }
+    Command::new("nft")
+        .args(&["add", "chain", "ip", "nat", &chain_name_prerouting, "{type nat hook prerouting priority 0; policy accept;}"])
+        .status()
+        .expect("Failed to execute 'nft add chain' command");
+
+    // nft add chain ip nat $chain_name_postrouting { type nat hook postrouting priority 100; policy accept; }
+    Command::new("nft")
+        .args(&["add", "chain", "ip", "nat", &chain_name_postrouting, "{ type nat hook postrouting priority 100; policy accept;}"])
+        .status()
+        .expect("Failed to execute 'nft add chain' command");
+
+    // nft add rule ip nat $chain_name_postrouting oifname "${ifname}" masquerade
+    Command::new("nft")
+        .args(&["add", "rule", "ip", "nat", &chain_name_postrouting, &format!("oifname \"{}\" masquerade", ifname)])
+        .status()
+        .expect("Failed to execute 'nft add rule' command");
 }

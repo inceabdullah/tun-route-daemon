@@ -15,8 +15,8 @@ async fn main() -> Result<()> {
 
     let ifname = route_utils::def::get_iface_name().await;
     println!("ifname: {:?}", ifname);
-    nft_utils::masq::rm_masq_for_ifname(&ifname);
-    // return Ok(());
+    nft_utils::masq::add_masq_for_ifname(&ifname);
+    return Ok(());
 
     // Parse command-line arguments for 'tun_device_name' and 'tun_device_ip'
     let args: Vec<String> = env::args().collect();
