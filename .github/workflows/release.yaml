@@ -27,7 +27,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "{{ PACKAGE_NAME }}-linux-x86_64"
+          files: "${{ PACKAGE_NAME }}-linux-x86_64"
 
 permissions:
   contents: write
