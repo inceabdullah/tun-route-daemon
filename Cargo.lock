@@ -1050,7 +1050,7 @@ dependencies = [
 
 [[package]]
 name = "tun-route-daemon"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "clap 4.4.1",
