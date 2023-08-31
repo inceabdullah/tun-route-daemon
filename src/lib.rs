@@ -11,6 +11,7 @@ pub mod route_utils {
     pub mod set_default_route;
     pub mod set_specific_route;
     pub mod store_old_route;
+    pub mod def;
 
     use std::io::Result;
 

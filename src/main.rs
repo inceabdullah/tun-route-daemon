@@ -9,6 +9,13 @@ async fn main() -> Result<()> {
     // Initialize Daemon
     println!("Daemon Initialized");
 
+    // Call an asynchronous function from your route_utils::def module
+    let ifindex = route_utils::def::get_iface().await.unwrap();
+
+    let ifname = route_utils::def::get_iface_name().await;
+    println!("ifname: {:?}", ifname);
+    return Ok(());
+
     // Parse command-line arguments for 'tun_device_name' and 'tun_device_ip'
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
