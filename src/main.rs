@@ -14,7 +14,7 @@ async fn main() -> Result<()> {
 
     let ifname = route_utils::def::get_iface_name().await;
     println!("ifname: {:?}", ifname);
-    return Ok(());
+    // return Ok(());
 
     // Parse command-line arguments for 'tun_device_name' and 'tun_device_ip'
     let args: Vec<String> = env::args().collect();
