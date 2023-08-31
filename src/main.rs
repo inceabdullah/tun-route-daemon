@@ -3,6 +3,7 @@ use std::io::Result;
 
 mod route_utils;
 mod interface_utils;
+mod nft_utils;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -14,6 +15,7 @@ async fn main() -> Result<()> {
 
     let ifname = route_utils::def::get_iface_name().await;
     println!("ifname: {:?}", ifname);
+    nft_utils::masq::rm_masq_for_ifname(&ifname);
     // return Ok(());
 
     // Parse command-line arguments for 'tun_device_name' and 'tun_device_ip'

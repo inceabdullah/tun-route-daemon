@@ -1,6 +1,6 @@
 [package]
 name = "tun-route-daemon"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["abdullah ince"]
 description = "A Rust-based daemon for managing and monitoring TUN devices and their routing configurations."
 license = "MIT"
@@ -21,3 +21,4 @@ net-route = "0.2.5"
 tokio = { version = "1", features = ["full"] }
 futures = "0.3"
 pnet = "0.34.0"
+regex = "1.9.4"
