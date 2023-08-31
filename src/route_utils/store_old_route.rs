@@ -1,6 +1,7 @@
 use net_route::Handle;
+use std::{net::IpAddr, str::FromStr};
 
-pub async fn get() -> std::io::Result<String> {
+pub async fn get() -> std::io::Result<IpAddr> {
     let handle = Handle::new()?;
     let routes = handle.list().await?;
 
@@ -12,15 +13,15 @@ pub async fn get() -> std::io::Result<String> {
         Some(route) => {
             if let Some(gateway) = route.gateway {
                 println!("Current default route is via gateway: {}", gateway);
-                Ok(gateway.to_string())
+                Ok(gateway)
             } else {
                 println!("No gateway found for the default route.");
-                Ok("".to_string())
+                Ok(IpAddr::from_str("").unwrap())
             }
         },
         None => {
             println!("No default route found.");
-            Ok("".to_string())
+            Ok(IpAddr::from_str("").unwrap())
         }
     }
 }
@@ -32,13 +33,10 @@ mod tests {
 
     #[test]
     async fn test_get_default_route() -> std::io::Result<()> {
-        let result = get().await?;
-        
-        // Check if the result is an IP address (very basic validation)
-        let is_ip: bool = result.parse::<std::net::IpAddr>().is_ok();
+        let result: IpAddr = get().await?;
         
         // Assert that the function returns a valid IP address
-        assert!(is_ip, "The returned value is not a valid IP address");
+        assert!(result.is_ipv4(), "The returned value is not a valid IP address");
 
         Ok(())
     }

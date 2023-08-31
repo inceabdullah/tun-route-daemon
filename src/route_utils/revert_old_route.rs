@@ -1,9 +1,10 @@
 use net_route::{Route, Handle};
+use std::{net::IpAddr, str::FromStr};
 
-pub async fn revert(old_route: &str) -> std::io::Result<()> {
+pub async fn revert(old_route: IpAddr) -> std::io::Result<()> {
     let handle = Handle::new()?;
-    let route = Route::new("0.0.0.0".parse().unwrap(), 0)
-        .with_gateway(old_route.parse().unwrap());
+    let route = Route::new(IpAddr::from_str("0.0.0.0").unwrap(), 0)
+        .with_gateway(old_route);
 
     println!("Reverting to old default route: {:?}", route);
     handle.add(&route).await
